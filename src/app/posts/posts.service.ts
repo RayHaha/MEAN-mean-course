@@ -52,8 +52,6 @@ export class PostsService{
                 content: content,
                 imagePath: responseData.post.imagePath
             };
-            // const id = responseData.postId;
-            // post.id = id;
             this.posts.push(post);
             this.postsUpdated.next([...this.posts]);
             this.router.navigate(["/"]);
