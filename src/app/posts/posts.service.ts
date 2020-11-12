@@ -10,24 +10,24 @@ import { Router } from '@angular/router';
 @Injectable({providedIn: 'root'})
 export class PostsService{
     private posts: Post[] = [];
-    private postsUpdated = new Subject<Post[]>();
+    private postsUpdated = new Subject<{posts: Post[], postCount: number}>();
 
     constructor(private http: HttpClient, private router: Router){}
 
     getPosts(postsPerPage: number, currentPage: number){
         const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`; // a special Javascript feature to dynamically add value into a normal string
-        this.http.get<{message: string, posts: any}>('http://localhost:3000/api/posts' + queryParams).pipe(map((postData) => {
-            return postData.posts.map(post => {
+        this.http.get<{message: string, posts: any, maxPosts: number}>('http://localhost:3000/api/posts' + queryParams).pipe(map((postData) => {
+            return { posts: postData.posts.map(post => {
                 return {
                     title: post.title,
                     content: post.content,
                     id: post._id,
                     imagePath: post.imagePath
                 };
-            });
-        })).subscribe((transformedPosts) => {
-            this.posts = transformedPosts;
-            this.postsUpdated.next([...this.posts]);
+            }), maxPosts: postData.maxPosts};
+        })).subscribe((transformedPostsData) => {
+            this.posts = transformedPostsData.posts;
+            this.postsUpdated.next({posts: [...this.posts], postCount: transformedPostsData.maxPosts});
         });
     }
 
