@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { isStringTextContainingNode } = require('typescript');
 
 const postSchema = mongoose.Schema({
     title: { type: String, required: true },
