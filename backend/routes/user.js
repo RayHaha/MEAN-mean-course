@@ -26,12 +26,14 @@ router.post("/signup", (req, res, next) => {
 });
 
 router.post("/login", (req, res, next) => {
+    let fetchedUser;
     User.findOne({ email: req.body.email }).then(user => {
         if(!user){
             return res.status(401).json({
                 message: 'Auth failed'
             });
         }
+        fetchedUser = user;
         return bcrypt.compare(req.body.password, user.password).then(result => {
             if(!result){
                 return res.status(401).json({
@@ -40,10 +42,13 @@ router.post("/login", (req, res, next) => {
             }
             // create JSON WEB TOKEN
             const token = jwt.sign({
-                email: user.email,
-                userId: user._id
+                email: fetchedUser.email,
+                userId: fetchedUser._id
             }, 'secret_password_to_create_token_this_should_be_longer', {
                 expiresIn: '1h'
+            });
+            res.status(200).json({
+                token: token
             });
         }).catch(err => {
             return res.status(401).json({
