@@ -7,7 +7,7 @@ module.exports = (req, res, next) => {
 
         // you can choose the way you get the token, for example: url or headers
         const token = req.headers.authorization.split(" ")[1];    // typically use the name authorization, the pattern is "Bearer (token)"
-        const decodedToken = jwt.verify(token, "secret_password_to_create_token_this_should_be_longer");
+        const decodedToken = jwt.verify(token, process.env.JWT_KEY);
 
         // add the data to the req, while next(), it'll pass the data to the next layer
         req.userData = {
