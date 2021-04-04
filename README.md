@@ -1,2 +1,2 @@
 # MEAN-mean-course
-practice code while learning mean stack
+Implement a posts board using MEAN stack.
